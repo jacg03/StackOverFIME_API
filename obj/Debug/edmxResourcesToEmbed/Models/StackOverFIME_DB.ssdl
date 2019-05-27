@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="StackOverFIMEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Commentary">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ParentId" Type="uniqueidentifier" />
+    <Property Name="Text" Type="varchar" MaxLength="500" />
+    <Property Name="UserId" Type="uniqueidentifier" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+    <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tag">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CommentaryId" Type="uniqueidentifier" />
+    <Property Name="Text" Type="varchar" MaxLength="100" />
+    <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="80" />
+    <Property Name="UserName" Type="varchar" MaxLength="60" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="18" Nullable="false" />
+    <Property Name="Active" Type="bit" Nullable="false" />
+    <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+    <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Commentary_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Commentary" Type="Self.Commentary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Commentary">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tag_Commentary">
+    <End Role="Commentary" Type="Self.Commentary" Multiplicity="0..1" />
+    <End Role="Tag" Type="Self.Tag" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Commentary">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Tag">
+        <PropertyRef Name="CommentaryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="SP_GetAnswersOfInitialCommentary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="InitialId" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="SP_GetInitialCommentariesWithDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_GetInitialCommentary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CommentaryId" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="SP_SearchInitialCommentaries" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="T" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="StackOverFIMEModelStoreContainer">
+    <EntitySet Name="Commentary" EntityType="Self.Commentary" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Commentary_User" Association="Self.FK_Commentary_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Commentary" EntitySet="Commentary" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tag_Commentary" Association="Self.FK_Tag_Commentary">
+      <End Role="Commentary" EntitySet="Commentary" />
+      <End Role="Tag" EntitySet="Tag" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

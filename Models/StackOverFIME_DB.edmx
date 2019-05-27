@@ -1,0 +1,371 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="StackOverFIMEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Commentary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ParentId" Type="uniqueidentifier" />
+          <Property Name="Text" Type="varchar" MaxLength="500" />
+          <Property Name="UserId" Type="uniqueidentifier" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CommentaryId" Type="uniqueidentifier" />
+          <Property Name="Text" Type="varchar" MaxLength="100" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="80" />
+          <Property Name="UserName" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Commentary_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Commentary" Type="Self.Commentary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Commentary">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tag_Commentary">
+          <End Role="Commentary" Type="Self.Commentary" Multiplicity="0..1" />
+          <End Role="Tag" Type="Self.Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commentary">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tag">
+              <PropertyRef Name="CommentaryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="SP_GetAnswersOfInitialCommentary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="InitialId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="SP_GetInitialCommentariesWithDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_GetInitialCommentary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CommentaryId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="SP_SearchInitialCommentaries" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="T" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="StackOverFIMEModelStoreContainer">
+          <EntitySet Name="Commentary" EntityType="Self.Commentary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Commentary_User" Association="Self.FK_Commentary_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Commentary" EntitySet="Commentary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tag_Commentary" Association="Self.FK_Tag_Commentary">
+            <End Role="Commentary" EntitySet="Commentary" />
+            <End Role="Tag" EntitySet="Tag" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StackOverFIMEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Commentary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="ParentId" Type="Guid" />
+          <Property Name="Text" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="Guid" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Commentary_User" FromRole="Commentary" ToRole="User" />
+          <NavigationProperty Name="Tags" Relationship="Self.FK_Tag_Commentary" FromRole="Commentary" ToRole="Tag" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="CommentaryId" Type="Guid" />
+          <Property Name="Text" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Commentary" Relationship="Self.FK_Tag_Commentary" FromRole="Tag" ToRole="Commentary" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="18" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Commentaries" Relationship="Self.FK_Commentary_User" FromRole="User" ToRole="Commentary" />
+        </EntityType>
+        <Association Name="FK_Commentary_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Commentary" Type="Self.Commentary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Commentary">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tag_Commentary">
+          <End Role="Commentary" Type="Self.Commentary" Multiplicity="0..1" />
+          <End Role="Tag" Type="Self.Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commentary">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tag">
+              <PropertyRef Name="CommentaryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StackOverFIMEEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Commentaries" EntityType="Self.Commentary" />
+          <EntitySet Name="Tags" EntityType="Self.Tag" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Commentary_User" Association="Self.FK_Commentary_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Commentary" EntitySet="Commentaries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tag_Commentary" Association="Self.FK_Tag_Commentary">
+            <End Role="Commentary" EntitySet="Commentaries" />
+            <End Role="Tag" EntitySet="Tags" />
+          </AssociationSet>
+          <FunctionImport Name="SP_CommentaryWithUserName" ReturnType="Collection(StackOverFIMEModel.SP_CommentaryWithUserName_Result)" />
+          <FunctionImport Name="SP_GetCommentariesOfInitialCommentary" ReturnType="Collection(StackOverFIMEModel.SP_GetCommentariesOfInitialCommentary_Result)">
+          <Parameter Name="InitialId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetInitialCommentaryDetails" ReturnType="Collection(StackOverFIMEModel.SP_GetInitialCommentaryDetails_Result)">
+          <Parameter Name="CommentaryId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetCommentariesWithDetails" ReturnType="Collection(StackOverFIMEModel.SP_GetCommentariesWithDetails_Result)" />
+          <FunctionImport Name="SP_SearchCommentaries" ReturnType="Collection(StackOverFIMEModel.SP_SearchCommentaries_Result)">
+            <Parameter Name="T" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetAnswersOfInitialCommentary" ReturnType="Collection(StackOverFIMEModel.SP_GetAnswersOfInitialCommentary_Result)">
+          <Parameter Name="InitialId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GetInitialCommentariesWithDetails" ReturnType="Collection(StackOverFIMEModel.SP_GetInitialCommentariesWithDetails_Result)" />
+          <FunctionImport Name="SP_GetInitialCommentary" ReturnType="Collection(StackOverFIMEModel.SP_GetInitialCommentary_Result)">
+          <Parameter Name="CommentaryId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_SearchInitialCommentaries" ReturnType="Collection(StackOverFIMEModel.SP_SearchInitialCommentaries_Result)">
+          <Parameter Name="T" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="SP_CommentaryWithUserName_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+          <Property Type="Guid" Name="ParentId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_GetCommentariesOfInitialCommentary_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_GetInitialCommentaryDetails_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_GetCommentariesWithDetails_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="Answers" Nullable="true" />
+          <Property Type="Guid" Name="UserId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SP_SearchCommentaries_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="Answers" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_GetAnswersOfInitialCommentary_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_GetInitialCommentariesWithDetails_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="Answers" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_GetInitialCommentary_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_SearchInitialCommentaries_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="Guid" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="Answers" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StackOverFIMEModelStoreContainer" CdmEntityContainer="StackOverFIMEEntities">
+          <EntitySetMapping Name="Commentaries">
+            <EntityTypeMapping TypeName="StackOverFIMEModel.Commentary">
+              <MappingFragment StoreEntitySet="Commentary">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tags">
+            <EntityTypeMapping TypeName="StackOverFIMEModel.Tag">
+              <MappingFragment StoreEntitySet="Tag">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CommentaryId" ColumnName="CommentaryId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="StackOverFIMEModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetAnswersOfInitialCommentary" FunctionName="StackOverFIMEModel.Store.SP_GetAnswersOfInitialCommentary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StackOverFIMEModel.SP_GetAnswersOfInitialCommentary_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetInitialCommentariesWithDetails" FunctionName="StackOverFIMEModel.Store.SP_GetInitialCommentariesWithDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StackOverFIMEModel.SP_GetInitialCommentariesWithDetails_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Answers" ColumnName="Answers" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetInitialCommentary" FunctionName="StackOverFIMEModel.Store.SP_GetInitialCommentary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StackOverFIMEModel.SP_GetInitialCommentary_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_SearchInitialCommentaries" FunctionName="StackOverFIMEModel.Store.SP_SearchInitialCommentaries">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="StackOverFIMEModel.SP_SearchInitialCommentaries_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Answers" ColumnName="Answers" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
